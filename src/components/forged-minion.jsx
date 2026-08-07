@@ -21,30 +21,10 @@ const RARITY_COLOR = {
 };
 
 const POOL = [
-  { name: "Mudroot Sapling", cost: 1, atk: 1, hp: 2, rarity: "Common", text: "Deathrattle: Summon a 1/1 Root Stump.", icon: Leaf },
-  { name: "Cinder Whelp", cost: 2, atk: 2, hp: 1, rarity: "Common", text: "Battlecry: Deal 1 damage to a random enemy minion.", icon: Flame },
-  { name: "Tidebound Skulker", cost: 3, atk: 3, hp: 3, rarity: "Rare", text: "Whenever this attacks, draw a card.", icon: Waves },
-  { name: "Graveyard Rat", cost: 1, atk: 1, hp: 1, rarity: "Common", text: "Deathrattle: Summon a 1/1 Graveyard Rat.", icon: Rat },
-  { name: "Stormcaller Yun", cost: 4, atk: 3, hp: 5, rarity: "Rare", text: "Battlecry: Deal 2 damage split among all enemy minions.", icon: CloudLightning },
-  { name: "Bonelash Wraith", cost: 5, atk: 4, hp: 4, rarity: "Epic", text: "Deathrattle: Deal 4 damage to the enemy hero.", icon: Ghost },
-  { name: "Frostbound Sentinel", cost: 3, atk: 2, hp: 5, rarity: "Common", text: "Taunt. Freeze any minion that damages this.", icon: Snowflake },
-  { name: "Emberclaw Kitten", cost: 2, atk: 3, hp: 1, rarity: "Common", text: "Battlecry: Give a friendly minion +1 Attack.", icon: Cat },
-  { name: "Ironshell Turtle", cost: 4, atk: 2, hp: 7, rarity: "Rare", text: "Taunt.", icon: Turtle },
-  { name: "Webspinner Matron", cost: 3, atk: 3, hp: 4, rarity: "Rare", text: "Deathrattle: Summon two 1/1 Spiderlings.", icon: Bug },
-  { name: "Runeforged Golem", cost: 6, atk: 6, hp: 6, rarity: "Epic", text: "Battlecry: Gain +2/+2 for each Rune you've equipped.", icon: ShieldHalf },
-  { name: "Duskwing Harrier", cost: 2, atk: 2, hp: 2, rarity: "Common", text: "Battlecry: Gain +1/+1 if you control a Beast.", icon: Bird },
-  { name: "Wandering Alchemist", cost: 3, atk: 2, hp: 3, rarity: "Rare", text: "Battlecry: Swap a random enemy minion's Attack and Health.", icon: Wand2 },
-  { name: "Sunveil Oracle", cost: 5, atk: 4, hp: 6, rarity: "Epic", text: "Battlecry: Restore 6 Health to your hero.", icon: Sun },
-  { name: "Moonlit Stalker", cost: 4, atk: 5, hp: 3, rarity: "Rare", text: "Stealth. Deathrattle: Deal 3 damage to a random enemy.", icon: Moon },
-  { name: "Ashveil Marauder", cost: 7, atk: 7, hp: 7, rarity: "Legendary", text: "Battlecry: Destroy a random enemy minion with 3 or less Attack.", icon: Sword },
-  { name: "Gravebind Chronicler", cost: 8, atk: 6, hp: 8, rarity: "Legendary", text: "Battlecry: Resurrect a friendly minion that died this game.", icon: Bone },
-  { name: "Featherfall Sprite", cost: 1, atk: 1, hp: 1, rarity: "Common", text: "Battlecry: Draw a card if your deck has 10 or less cards.", icon: Feather },
-  { name: "Amberglass Djinn", cost: 6, atk: 5, hp: 5, rarity: "Epic", text: "Battlecry: Deal 5 damage to a minion. If that kills it, gain its stats.", icon: Gem },
-  { name: "Verdant Colossus", cost: 8, atk: 8, hp: 8, rarity: "Epic", text: "Costs (1) less for each other minion you control.", icon: TreeDeciduous },
-  { name: "Ninefold Hexcaster", cost: 4, atk: 3, hp: 4, rarity: "Rare", text: "Battlecry: Deal 2 damage. If this kills a minion, repeat this Battlecry.", icon: Zap },
-  { name: "Wyrmtongue Cultist", cost: 3, atk: 4, hp: 2, rarity: "Common", text: "Battlecry: Discard a random card.", icon: Eye },
-  { name: "Sablewing Reaper", cost: 9, atk: 9, hp: 9, rarity: "Legendary", text: "Deathrattle: Deal damage equal to this minion's Attack to the enemy hero.", icon: Crown },
-  { name: "Blightspore Fungus", cost: 2, atk: 1, hp: 4, rarity: "Common", text: "Whenever this takes damage, deal 1 damage to a random enemy minion.", icon: Flag },
+  { name: "Witch's Apprentice", cost: 0, atk: 0, hp: 1, rarity: "Common", text: "Taunt\nBattlecry: Add a random Shaman spell to your hand.", icon: Leaf },
+  { name: "Darkrider", cost: 1, atk: 1, hp: 1, rarity: "Rare", text: "Battlecry: If you're holding a Dragon, Discover a Dragon with a Dark Gift.", icon: Flame },
+  { name: "Big Game Hunter", cost: 4, atk: 4, hp: 2, rarity: "Epic", text: "Tradeable\nBattlecry: Destroy a minion with 7 or more Attack.", icon: Waves },
+  { name: "Archmage Antonidas", cost: 7, atk: 5, hp: 7, rarity: "Legendary", text: "Whenever you cast a spell, add a 'Fireball' spell to your hand.", icon: Rat },
 ];
 
 // Curated duotone gradients for card art — deterministic per-name so the
@@ -312,11 +292,6 @@ export default function ForgedMinionGame() {
           <span style={{ fontSize: 11, letterSpacing: "0.1em", color: "#8a8375" }}>BEST</span>
           <span style={{ fontSize: 26, fontWeight: 700 }}>{best}</span>
         </div>
-        {/* <div style={{ width: 1, height: 34, background: LINE }} />
-        <div className="flex flex-col items-center">
-          <span style={{ fontSize: 11, letterSpacing: "0.1em", color: "#8a8375" }}>ROUNDS</span>
-          <span style={{ fontSize: 26, fontWeight: 700 }}>{rounds}</span>
-        </div> */}
       </div>
 
       <div className="flex flex-wrap justify-center gap-5 mt-4">
