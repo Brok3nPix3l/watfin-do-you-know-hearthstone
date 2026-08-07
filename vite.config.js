@@ -3,5 +3,6 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/watfin-do-you-know-hearthstone/',
   plugins: [react()],
 })
