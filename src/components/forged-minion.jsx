@@ -312,11 +312,11 @@ export default function ForgedMinionGame() {
           <span style={{ fontSize: 11, letterSpacing: "0.1em", color: "#8a8375" }}>BEST</span>
           <span style={{ fontSize: 26, fontWeight: 700 }}>{best}</span>
         </div>
-        <div style={{ width: 1, height: 34, background: LINE }} />
+        {/* <div style={{ width: 1, height: 34, background: LINE }} />
         <div className="flex flex-col items-center">
           <span style={{ fontSize: 11, letterSpacing: "0.1em", color: "#8a8375" }}>ROUNDS</span>
           <span style={{ fontSize: 26, fontWeight: 700 }}>{rounds}</span>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex flex-wrap justify-center gap-5 mt-4">
