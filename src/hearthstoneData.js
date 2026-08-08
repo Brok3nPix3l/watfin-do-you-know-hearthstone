@@ -50,7 +50,7 @@ export async function getMinionData({ forceRefresh = false } = {}) {
       atk: c.attack,
       hp: c.health,
       rarity: c.rarity ?? "FREE",
-      text: cleanText(c.text),
+      text: cleanText(c.collectionText || c.text),
     }));
 
   writeCache(minions);
@@ -82,6 +82,7 @@ function cleanText(text) {
   return text
     .replace(/\$/g, "")
     .replace(/#/g, "")
+    .replace(/\[x]/g, "")
     .trim();
 }
 

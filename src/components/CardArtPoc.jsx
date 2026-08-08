@@ -16,6 +16,7 @@ export default function CardArtPoc() {
   const [status, setStatus] = useState("loading"); // loading | ready | error
   const [error, setError] = useState(null);
   const [artMode, setArtMode] = useState("render"); // "render" | "tile"
+  const [search, setSearch] = useState("");
 
   const load = useCallback(async (forceRefresh = false) => {
     setStatus("loading");
@@ -34,6 +35,15 @@ export default function CardArtPoc() {
   useEffect(() => {
     load(false);
   }, [load]);
+
+  useEffect(() => {
+    if (!search.trim()) {
+      setSample(pickRandom(minions, 6));
+      return;
+    }
+
+    setSample(findClosestMatches(minions, search, 6));
+  }, [search, minions]);
 
   const cacheAgeLabel = () => {
     const ageMs = getCacheAge();
@@ -54,6 +64,20 @@ export default function CardArtPoc() {
         <span style={{ color: "#8a8375" }}>{status === "ready" ? `${minions.length} minions loaded` : status}</span>
         <span style={{ color: "#8a8375" }}>·</span>
         <span style={{ color: "#8a8375" }}>{cacheAgeLabel()}</span>
+        <input
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search minions"
+          style={{
+            fontSize: 12,
+            padding: "4px 10px",
+            borderRadius: 999,
+            border: "1px solid #332e42",
+            background: "#1b1826",
+            color: "#efe6cf",
+            minWidth: 200,
+          }}
+        />
         <button onClick={() => load(true)} style={btnStyle}>Force refetch</button>
         <button
           onClick={() => {
@@ -70,6 +94,7 @@ export default function CardArtPoc() {
         <button onClick={() => setArtMode((m) => (m === "render" ? "tile" : "render"))} style={btnStyle}>
           Art: {artMode}
         </button>
+
       </div>
 
       {status === "error" && (
@@ -128,6 +153,50 @@ export default function CardArtPoc() {
 
 function pickRandom(arr, n) {
   return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
+}
+
+function findClosestMatches(arr, query, n) {
+  if (!query.trim()) {
+    return pickRandom(arr, n);
+  }
+
+  const lowerQuery = query.toLowerCase();
+  return [...arr]
+    .map((card) => ({ card, score: nameSimilarityScore(card.name, lowerQuery) }))
+    .sort((a, b) => b.score - a.score)
+    .filter((item) => item.score > 0)
+    .slice(0, n)
+    .map((item) => item.card);
+}
+
+function nameSimilarityScore(name, query) {
+  const lowerName = name.toLowerCase();
+  if (lowerName === query) return 1000;
+  if (lowerName.startsWith(query)) return 800;
+  if (lowerName.includes(query)) return 600 + query.length;
+
+  return longestCommonSubstring(lowerName, query) * 40;
+}
+
+function longestCommonSubstring(a, b) {
+  const dp = Array(b.length + 1).fill(0);
+  let max = 0;
+
+  for (let i = 1; i <= a.length; i += 1) {
+    let prev = 0;
+    for (let j = 1; j <= b.length; j += 1) {
+      const temp = dp[j];
+      if (a[i - 1] === b[j - 1]) {
+        dp[j] = prev + 1;
+        max = Math.max(max, dp[j]);
+      } else {
+        dp[j] = 0;
+      }
+      prev = temp;
+    }
+  }
+
+  return max;
 }
 
 const btnStyle = {
