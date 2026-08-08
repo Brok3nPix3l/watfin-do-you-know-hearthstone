@@ -4,28 +4,20 @@ import {
   Bug, ShieldHalf, Bird, Wand2, Sun, Moon, Sword, Bone, Feather, Gem,
   TreeDeciduous, Zap, Eye, Crown, Stamp, Flag,
 } from "lucide-react";
+import parse from "html-react-parser";
+import { getMinionData, tileArtUrl, renderArtUrl, getCacheAge, clearMinionCache } from "../hearthstoneData";
 
-/* ---------------------------------------------------------------------- */
-/* Card pool — original fantasy minions (not reproductions of any real   */
-/* card game's specific cards/art). Inspired by the "spot the forged     */
-/* card" appraisal mechanic.                                             */
-/* ---------------------------------------------------------------------- */
-
-const RARITIES = ["Common", "Rare", "Epic", "Legendary"];
+const RARITIES = ["FREE", "COMMON", "RARE", "EPIC", "LEGENDARY"];
 
 const RARITY_COLOR = {
-  Common: "#8a8375",
-  Rare: "#3f9c98",
-  Epic: "#9166d6",
-  Legendary: "#d4af37",
+  FREE: "#8a8375",
+  COMMON: "#8a8375",
+  RARE: "#3f9c98",
+  EPIC: "#9166d6",
+  LEGENDARY: "#d4af37",
 };
 
-const POOL = [
-  { name: "Witch's Apprentice", cost: 0, atk: 0, hp: 1, rarity: "Common", text: "Taunt\nBattlecry: Add a random Shaman spell to your hand.", icon: Leaf },
-  { name: "Darkrider", cost: 1, atk: 1, hp: 1, rarity: "Rare", text: "Battlecry: If you're holding a Dragon, Discover a Dragon with a Dark Gift.", icon: Flame },
-  { name: "Big Game Hunter", cost: 4, atk: 4, hp: 2, rarity: "Epic", text: "Tradeable\nBattlecry: Destroy a minion with 7 or more Attack.", icon: Waves },
-  { name: "Archmage Antonidas", cost: 7, atk: 5, hp: 7, rarity: "Legendary", text: "Whenever you cast a spell, add a 'Fireball' spell to your hand.", icon: Rat },
-];
+const POOL = await getMinionData();
 
 // Curated duotone gradients for card art — deterministic per-name so the
 // same minion always looks the same, without needing real artwork.
@@ -126,7 +118,6 @@ const LINE = "#332e42";
 
 function MinionCard({ card, state, onClick }) {
   // state: "idle" | "correct" | "wrong-pick" | "actual-forgery"
-  const Icon = card.icon;
   const ring =
     state === "correct" ? "#3f9c78" : state === "wrong-pick" ? "#c0533a" : state === "actual-forgery" ? "#d4af37" : LINE;
 
@@ -147,7 +138,6 @@ function MinionCard({ card, state, onClick }) {
         className="relative flex items-center justify-center"
         style={{ height: 128, background: gradientFor(card.name) }}
       >
-        <Icon size={52} color="rgba(255,255,255,0.85)" strokeWidth={1.5} />
         <div
           className="absolute top-2 left-2 flex items-center justify-center rounded-full"
           style={{
@@ -205,8 +195,8 @@ function MinionCard({ card, state, onClick }) {
         >
           {card.rarity}
         </div>
-        <p style={{ fontFamily: "'Spectral', serif", fontSize: 12, lineHeight: 1.35, color: "#c9bfa3", minHeight: 48 }}>
-          {card.text}
+        <p style={{ fontFamily: "'Spectral', serif", fontSize: 12, lineHeight: 1.35, color: "#c9bfa3", minHeight: 48, whiteSpace: "pre-wrap", textAlign: "center" }}>
+          {parse(card.text)}
         </p>
         <div className="flex justify-end gap-3 pt-1" style={{ borderTop: `1px solid ${LINE}` }}>
           <span style={{ fontFamily: "'Spectral', serif", fontWeight: 700, fontSize: 15 }}>{card.atk}</span>
@@ -232,7 +222,7 @@ export default function ForgedMinionGame() {
     setPickedIndex(null);
   }, []);
 
-  const handlePick = (i) => {
+  const handlEPICk = (i) => {
     if (phase !== "guessing") return;
     setPickedIndex(i);
     setPhase("revealed");
@@ -296,7 +286,7 @@ export default function ForgedMinionGame() {
 
       <div className="flex flex-wrap justify-center gap-5 mt-4">
         {round.cards.map((card, i) => (
-          <MinionCard key={i} card={card} state={cardState(i)} onClick={() => handlePick(i)} />
+          <MinionCard key={i} card={card} state={cardState(i)} onClick={() => handlEPICk(i)} />
         ))}
       </div>
 

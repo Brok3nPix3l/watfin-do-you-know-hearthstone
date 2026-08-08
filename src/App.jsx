@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import ForgedMinionGame from './components/forged-minion'
+import DoYouKnowHearthstoneGame from './components/do-you-know-hearthstone'
 
 function App() {
   return (
-    <ForgedMinionGame />
+    <DoYouKnowHearthstoneGame />
   )
 }
 
