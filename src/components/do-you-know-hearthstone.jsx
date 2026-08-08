@@ -19,30 +19,6 @@ const RARITY_COLOR = {
 
 const POOL = await getMinionData();
 
-// Curated duotone gradients for card art — deterministic per-name so the
-// same minion always looks the same, without needing real artwork.
-const GRADIENTS = [
-  ["#2b2140", "#6a4fae"],
-  ["#1f2f2a", "#3f9c78"],
-  ["#3a1f1f", "#c0533a"],
-  ["#1c2733", "#3f7fae"],
-  ["#332417", "#c98a3d"],
-  ["#241735", "#8a3fae"],
-  ["#152a2a", "#2fa7a1"],
-  ["#301a24", "#ae3f74"],
-];
-
-function hashStr(s) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  return h;
-}
-
-function gradientFor(name) {
-  const g = GRADIENTS[hashStr(name) % GRADIENTS.length];
-  return `linear-gradient(160deg, ${g[0]}, ${g[1]})`;
-}
-
 /* ---------------------------------------------------------------------- */
 /* Modification logic                                                     */
 /* ---------------------------------------------------------------------- */
@@ -116,7 +92,7 @@ const BG = "#12101a";
 const PANEL = "#1b1826";
 const LINE = "#332e42";
 
-function MinionCard({ card, state, onClick }) {
+function MinionCard({ card, state, phase, onClick }) {
   // state: "idle" | "correct" | "wrong-pick" | "actual-forgery"
   const ring =
     state === "correct" ? "#3f9c78" : state === "wrong-pick" ? "#c0533a" : state === "actual-forgery" ? "#d4af37" : LINE;
@@ -131,12 +107,12 @@ function MinionCard({ card, state, onClick }) {
         background: PANEL,
         boxShadow: state === "idle" ? "0 4px 18px rgba(0,0,0,0.35)" : `0 0 0 3px ${ring}33`,
         transform: state === "idle" ? "translateY(0)" : "translateY(-2px)",
-        cursor: onClick ? "pointer" : "default",
+        cursor: phase === "guessing" ? "pointer" : "default",
       }}
     >
       <div
         className="relative flex items-center justify-center"
-        style={{ height: 128, background: `url(${tileArtUrl(card.id)}) no-repeat center / cover` }}
+        style={{ height: 128, backgroundImage: `url(${tileArtUrl(card.id)})`, backgroundRepeat: "no-repeat", backgroundSize: "contain" }}
       >
         <div
           className="absolute top-2 left-2 flex items-center justify-center rounded-full"
@@ -258,13 +234,9 @@ export default function ForgedMinionGame() {
 
       <div className="flex flex-col items-center gap-1 mb-2">
         <div className="flex items-center gap-2" style={{ color: "#8a8375" }}>
-          <Stamp size={16} />
-          <span style={{ fontFamily: "'Cinzel', serif", fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" }}>
-            The Appraiser's Table
-          </span>
         </div>
         <h1 style={{ fontFamily: "'Cinzel', serif", fontSize: 30, fontWeight: 700, margin: 0 }}>
-          Spot the Forged Minion
+          Do You Know Hearthstone?
         </h1>
         <p style={{ fontFamily: "'Spectral', serif", fontSize: 13.5, color: "#a89d80", maxWidth: 480, textAlign: "center" }}>
           One of these three minions has been tampered with — a stat, a cost, a rarity, or a line
@@ -286,7 +258,7 @@ export default function ForgedMinionGame() {
 
       <div className="flex flex-wrap justify-center gap-5 mt-4">
         {round.cards.map((card, i) => (
-          <MinionCard key={i} card={card} state={cardState(i)} onClick={() => handlEPICk(i)} />
+          <MinionCard key={i} card={card} state={cardState(i)} phase={phase} onClick={() => handlEPICk(i)} />
         ))}
       </div>
 
@@ -305,7 +277,7 @@ export default function ForgedMinionGame() {
             >
               {correct ? "Caught it. " : "Missed one. "}
               <span style={{ color: "#a89d80", fontFamily: "'Spectral', serif", fontWeight: 400 }}>
-                {round.detail.type} was altered — {round.detail.before} → {round.detail.after}
+                {round.detail.type} was altered — {parse(round.detail.before)} → {parse(round.detail.after)}
               </span>
             </div>
             <button
@@ -318,6 +290,7 @@ export default function ForgedMinionGame() {
                 background: "#efe6cf",
                 color: "#1b1826",
                 fontWeight: 600,
+                cursor: "pointer",
               }}
             >
               Next Round
