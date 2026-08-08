@@ -136,7 +136,7 @@ function MinionCard({ card, state, onClick }) {
     >
       <div
         className="relative flex items-center justify-center"
-        style={{ height: 128, background: gradientFor(card.name) }}
+        style={{ height: 128, background: `url(${tileArtUrl(card.id)}) no-repeat center / cover` }}
       >
         <div
           className="absolute top-2 left-2 flex items-center justify-center rounded-full"
